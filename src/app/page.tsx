@@ -1,19 +1,13 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useTelegramWebApp } from '@/hooks/useTelegramWebApp';
 import { DemoVideo } from '@/components/DemoVideo';
+import GenerationForm from '@/components/GenerationForm';
 
 export default function Home() {
-  const [prompt, setPrompt] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const { webApp } = useTelegramWebApp();
-
-  const handleGenerate = async () => {
-    setIsGenerating(true);
-    // TODO: Implement generation logic
-    setIsGenerating(false);
-  };
 
   return (
     <main className="min-h-screen flex items-center justify-center py-12">
@@ -32,45 +26,29 @@ export default function Home() {
             src="/videos/Видео 1.mp4"
             className="mb-4 mx-auto max-w-2xl"
           />
-          <p className="text-white/70 text-sm italic">
+          <p className="text-white/70 text-sm italic mb-6">
             Пример сгенерированного видео
           </p>
+
+          {/* Кнопка открытия формы */}
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="w-full max-w-md mx-auto text-lg py-4 px-4 rounded-lg font-medium bg-blue-500 text-white hover:bg-blue-600 hover:scale-105 active:scale-95 transition-all duration-200 ease-in-out flex items-center justify-center gap-2 pulse-button"
+          >
+            <span>✨</span>
+            <span>Создать видео</span>
+          </button>
         </div>
 
-        {/* Основная секция */}
-        <div className="glass-card mb-12">
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-semibold mb-2">Создать новое видео</h2>
-              <p className="text-white/80">
-                Опишите видео, которое хотите создать, и наши ИИ помогут воплотить вашу идею в жизнь
-              </p>
-            </div>
-
-            <textarea
-              placeholder="Например: Закат на пляже с пальмами, волны нежно накатывают на берег..."
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              className="input-field h-32 resize-none"
-              disabled={isGenerating}
-            />
-
-            {!webApp && (
-              <div className="flex justify-end">
-                <button
-                  onClick={handleGenerate}
-                  disabled={!prompt.trim() || isGenerating}
-                  className="button-primary"
-                >
-                  {isGenerating ? 'Генерация...' : 'Сгенерировать видео'}
-                </button>
-              </div>
-            )}
+        {/* Форма генерации */}
+        {showForm && (
+          <div className="mt-8 animate-fadeIn">
+            <GenerationForm />
           </div>
-        </div>
+        )}
 
         {/* Особенности */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
           <div className="feature-card">
             <h3 className="text-xl font-semibold mb-3">Veo 3</h3>
             <p className="text-white/80">

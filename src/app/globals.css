@@ -36,6 +36,39 @@
   }
 }
 
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+.pulse-button {
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.2);
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
 /* Component styles */
 @layer components {
 .glass-card {
@@ -132,6 +165,52 @@
 
   .button-primary:active {
     transform: scale(0.95);
+  }
+
+  /* Стиль для кнопки создания видео */
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(123, 181, 242, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 15px rgba(123, 181, 242, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(123, 181, 242, 0);
+    }
+  }
+
+  .create-video-button {
+    background: linear-gradient(135deg, #7BB5F2, #64B8F9);
+    color: #000;
+    font-weight: 600;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: Inter, 'SF Pro Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.01em;
+    text-shadow: none;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+    animation: pulse 2.5s infinite;
+    transform: translateY(0);
+  }
+
+  .create-video-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(123, 181, 242, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+    background: linear-gradient(135deg, #64B8F9, #7BB5F2);
+  }
+
+  .create-video-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     background-color: rgba(255, 255, 255, 0.2);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
