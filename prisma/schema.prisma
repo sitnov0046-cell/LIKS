@@ -1,0 +1,56 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Модель пользователя
+model User {
+  id        Int      @id @default(autoincrement())
+  telegramId String  @unique
+  username  String?
+  balance   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  videos    Video[]
+  referrals Referral[]
+  transactions Transaction[]
+}
+
+// Модель видео
+model Video {
+  id          Int      @id @default(autoincrement())
+  title       String
+  telegramFileId String // ID файла в Telegram
+  thumbnailFileId String? // ID превью в Telegram
+  createdAt   DateTime @default(now())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+// Модель реферальной системы
+model Referral {
+  id          Int      @id @default(autoincrement())
+  referrerId  Int      // ID пользователя, который пригласил
+  referredId  Int      // ID приглашенного пользователя
+  createdAt   DateTime @default(now())
+  referrer    User     @relation(fields: [referrerId], references: [id])
+}
+
+// Модель истории транзакций
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  amount      Int      // Положительное - пополнение, отрицательное - списание
+  type        String   // "deposit", "withdrawal", "referral_bonus", "video_generation"
+  description String?  // Описание транзакции
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+}
