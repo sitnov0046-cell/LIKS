@@ -77,7 +77,7 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 pb-24">
+    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 animate-gradient bg-300% pb-24">
       <div className="container mx-auto px-8 py-8 max-w-4xl">
         {/* Заголовок */}
         <div className="text-center mb-12">

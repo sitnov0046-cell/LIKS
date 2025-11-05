@@ -27,26 +27,26 @@ const GenerationForm = () => {
 
   return (
     <div className="w-full">
-      <form onSubmit={handleSubmit} className="glass-card space-y-6 p-6">
-        <div className="space-y-4">
-          <label className="block text-white font-medium text-lg">
-            Опишите видео, которое хотите создать
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-2xl p-8 border-4 border-gradient">
+        <div className="space-y-6">
+          <label className="block text-gray-800 font-semibold text-lg">
+            ✨ Опишите видео, которое хотите создать
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="mt-2 w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-white/40 transition-colors text-lg placeholder:text-base"
-              placeholder="Например: Красивый закат на берегу моря с пальмами..."
+              className="mt-3 w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all text-base"
+              placeholder="Например: Красивый закат на берегу моря с пальмами, волны плещутся о берег..."
               rows={4}
             />
           </label>
 
           <div className="mt-6">
-            <label className="block text-white font-medium mb-2 text-lg">
-              Добавить референс (фото)
+            <label className="block text-gray-800 font-semibold mb-3 text-lg">
+              🖼️ Добавить референс (необязательно)
             </label>
             <div className="flex items-center space-x-4">
-              <label className="flex items-center justify-center px-6 py-3 border border-white/20 rounded-lg cursor-pointer hover:bg-white/10 transition-colors">
-                <span className="text-white text-base">📎 Выбрать файл</span>
+              <label className="flex items-center justify-center px-6 py-3 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-all">
+                <span className="text-gray-700 font-medium">📎 Выбрать изображение</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -55,8 +55,8 @@ const GenerationForm = () => {
                 />
               </label>
               {imageFile && (
-                <span className="text-white/80">
-                  Выбрано: {imageFile.name}
+                <span className="text-green-600 font-medium flex items-center gap-2">
+                  ✓ {imageFile.name}
                 </span>
               )}
             </div>
@@ -65,27 +65,27 @@ const GenerationForm = () => {
 
         {/* Слайдер выбора модели */}
         <div className="mb-6 mt-8">
-          <label className="block text-white font-medium mb-3">
-            Выберите нейросеть
+          <label className="block text-gray-800 font-semibold mb-3 text-lg">
+            🤖 Выберите нейросеть
           </label>
           <button
             onClick={handleModelChange}
             type="button"
-            className="w-full relative h-14 bg-white/10 rounded-lg overflow-hidden transition-all duration-300"
+            className="w-full relative h-16 bg-gray-100 rounded-xl overflow-hidden transition-all duration-300 border-2 border-gray-200 hover:border-purple-300"
           >
-            <div 
-              className={`absolute top-0 h-full bg-blue-500 transition-all duration-300 ${
+            <div
+              className={`absolute top-0 h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300 ${
                 selectedModel === 'sora' ? 'left-0 w-1/2' : 'left-1/2 w-1/2'
               }`}
             />
             <div className="relative z-10 h-full flex items-center justify-between px-4">
-              <div className={`flex-1 text-center transition-colors duration-300 font-medium ${
-                selectedModel === 'sora' ? 'text-white' : 'text-white/50'
+              <div className={`flex-1 text-center transition-colors duration-300 font-bold text-lg ${
+                selectedModel === 'sora' ? 'text-white' : 'text-gray-600'
               }`}>
                 Sora 2
               </div>
-              <div className={`flex-1 text-center transition-colors duration-300 font-medium ${
-                selectedModel === 'veo' ? 'text-white' : 'text-white/50'
+              <div className={`flex-1 text-center transition-colors duration-300 font-bold text-lg ${
+                selectedModel === 'veo' ? 'text-white' : 'text-gray-600'
               }`}>
                 Veo 3
               </div>
@@ -93,11 +93,15 @@ const GenerationForm = () => {
           </button>
         </div>
 
-        <Button type="submit" className="w-full mt-6 text-xl py-4">
+        <button
+          type="submit"
+          className="w-full mt-6 text-xl py-5 px-6 rounded-xl font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl animate-pulse-slow"
+        >
           🎬 Начать генерацию
-        </Button>
-        <p className="text-center text-white/70 text-sm italic mt-2">
-          При генерации будет списано 2 токена
+        </button>
+        <p className="text-center text-gray-500 text-sm font-medium mt-3 flex items-center justify-center gap-2">
+          <span>💎</span>
+          <span>При генерации будет списано 2 токена</span>
         </p>
       </form>
     </div>

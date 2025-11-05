@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { REFERRAL_BONUS, TRANSACTION_TYPES } from '@/lib/constants';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -57,7 +58,8 @@ export async function POST(request: Request) {
     const { telegramId, title, fileId, thumbnailId } = await request.json();
 
     const user = await prisma.user.findUnique({
-      where: { telegramId }
+      where: { telegramId },
+      include: { referrals: { include: { referrer: true } } }
     });
 
     if (!user) {
@@ -67,6 +69,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // Сохраняем видео
     const video = await prisma.video.create({
       data: {
         title,
@@ -75,6 +78,28 @@ export async function POST(request: Request) {
         userId: user.id
       }
     });
+
+    // Если у пользователя есть реферер — начисляем бонус за генерацию видео
+    const referral = await prisma.referral.findFirst({ where: { referredId: user.id } });
+    if (referral) {
+      const referrer = await prisma.user.findUnique({ where: { id: referral.referrerId } });
+      if (referrer) {
+        await prisma.$transaction([
+          prisma.transaction.create({
+            data: {
+              userId: referrer.id,
+              amount: REFERRAL_BONUS,
+              type: TRANSACTION_TYPES.REFERRAL_BONUS,
+              description: `Бонус за генерацию видео приглашённым пользователем ${user.username || user.telegramId}`
+            }
+          }),
+          prisma.user.update({
+            where: { id: referrer.id },
+            data: { balance: { increment: REFERRAL_BONUS } }
+          })
+        ]);
+      }
+    }
 
     return NextResponse.json(video);
   } catch (error) {

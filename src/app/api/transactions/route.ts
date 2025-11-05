@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const transactions = await prisma.transaction.findMany({
+  const transactions = await prisma.transaction.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: 'desc' },
       take: limit ? parseInt(limit) : undefined
@@ -50,9 +50,24 @@ export async function POST(request: Request) {
   try {
     const { telegramId, amount, type, description } = await request.json();
 
+
     if (!telegramId || !amount || !type) {
       return NextResponse.json(
         { error: 'Telegram ID, amount, and type are required' },
+        { status: 400 }
+      );
+    }
+
+    // Ограничение на вывод: только если сумма >= 1000 и тип withdrawal
+    if (type === 'withdrawal' && amount > 0) {
+      return NextResponse.json(
+        { error: 'Сумма для вывода должна быть отрицательной (списание)' },
+        { status: 400 }
+      );
+    }
+    if (type === 'withdrawal' && Math.abs(amount) < 1000) {
+      return NextResponse.json(
+        { error: 'Минимальная сумма для вывода — 1000₽' },
         { status: 400 }
       );
     }
@@ -71,7 +86,7 @@ export async function POST(request: Request) {
     // Используем транзакцию для атомарного обновления баланса и создания записи
     const result = await prisma.$transaction(async (tx) => {
       // Создаем запись о транзакции
-      const transaction = await tx.transaction.create({
+  const transaction = await tx.transaction.create({
         data: {
           userId: user.id,
           amount,

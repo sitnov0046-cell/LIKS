@@ -103,42 +103,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // Создаем новую реферальную запись и начисляем бонус в одной транзакции
-    const result = await prisma.$transaction(async (tx) => {
-      // Создаем реферальную запись
-      const referral = await tx.referral.create({
-        data: {
-          referrerId: referrer.id,
-          referredId: referred.id
-        }
-      });
-
-      // Создаем транзакцию для бонуса
-      await tx.transaction.create({
-        data: {
-          userId: referrer.id,
-          amount: REFERRAL_BONUS,
-          type: TRANSACTION_TYPES.REFERRAL_BONUS,
-          description: `Бонус за приглашение пользователя ${referred.username || referred.telegramId}`
-        }
-      });
-
-      // Обновляем баланс рефerer
-      await tx.user.update({
-        where: { id: referrer.id },
-        data: {
-          balance: {
-            increment: REFERRAL_BONUS
-          }
-        }
-      });
-
-      return referral;
+    // Создаём только реферальную запись, бонус начисляется при генерации видео
+    const referral = await prisma.referral.create({
+      data: {
+        referrerId: referrer.id,
+        referredId: referred.id
+      }
     });
 
     return NextResponse.json({
-      referral: result,
-      bonusAwarded: REFERRAL_BONUS
+      referral
     });
   } catch (error) {
     console.error('Error creating referral:', error);

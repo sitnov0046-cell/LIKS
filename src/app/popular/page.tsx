@@ -25,6 +25,8 @@ export default function PopularVideosPage() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [userBalance, setUserBalance] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [selectedVideoId, setSelectedVideoId] = useState<number | null>(null);
+  const [bidAmount, setBidAmount] = useState<number>(FEATURED_MIN_BID);
 
   // Загрузка данных
   useEffect(() => {
@@ -90,7 +92,7 @@ export default function PopularVideosPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 flex items-center justify-center pb-24">
+      <div className="min-h-screen bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 animate-gradient bg-300% flex items-center justify-center pb-24">
         <div className="text-center">
           <div className="text-6xl mb-4">⏳</div>
           <p className="text-gray-600">Загрузка...</p>
@@ -100,7 +102,7 @@ export default function PopularVideosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 pb-24">
+    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 animate-gradient bg-300% pb-24">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Заголовок */}
         <div className="text-center mb-8">
@@ -134,7 +136,7 @@ export default function PopularVideosPage() {
                     <p className="text-gray-600">от @{featuredVideo.user.username || 'Аноним'}</p>
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-6">
                       <div className="flex items-center gap-2">
                         <span className="text-2xl">❤️</span>
@@ -146,14 +148,107 @@ export default function PopularVideosPage() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Форма перебивания ставки */}
+                  <div className="border-t border-gray-200 pt-6">
+                    <h4 className="text-lg font-bold text-gray-800 mb-4 text-center">🔥 Перебей ставку!</h4>
+
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      {/* Выбор видео */}
+                      <select
+                        value={selectedVideoId || ''}
+                        onChange={(e) => setSelectedVideoId(Number(e.target.value))}
+                        className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+                      >
+                        <option value="">-- Выбери своё видео --</option>
+                        {videos.map((video) => (
+                          <option key={video.id} value={video.id}>
+                            {video.title}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* Поле ставки */}
+                      <input
+                        type="number"
+                        min={featuredVideo.currentBid + 1}
+                        value={bidAmount}
+                        onChange={(e) => setBidAmount(Number(e.target.value))}
+                        placeholder={`Мин. ${featuredVideo.currentBid + 1}`}
+                        className="w-32 px-4 py-3 border-2 border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+                      />
+
+                      {/* Кнопка */}
+                      <button
+                        onClick={() => selectedVideoId && handleBidForFeatured(selectedVideoId, bidAmount)}
+                        disabled={!selectedVideoId || bidAmount <= featuredVideo.currentBid}
+                        className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg whitespace-nowrap"
+                      >
+                        👑 Разместить
+                      </button>
+                    </div>
+
+                    <p className="text-xs text-gray-500 mt-3 text-center">
+                      При перебитии таймер обнулится и начнётся заново ({FEATURED_DURATION_HOURS} часа)
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🎬</div>
                   <p className="text-xl text-gray-600 mb-4">Главная позиция свободна!</p>
-                  <p className="text-gray-500">
-                    Поставь свое видео на главную за {FEATURED_MIN_BID} токена на {FEATURED_DURATION_HOURS} часов
+                  <p className="text-gray-500 mb-6">
+                    Поставь свое видео на главную за {FEATURED_MIN_BID} токена на {FEATURED_DURATION_HOURS} часа
                   </p>
+
+                  {/* Форма размещения видео */}
+                  <div className="max-w-md mx-auto mt-6">
+                    <div className="bg-white rounded-xl p-6 shadow-md">
+                      <h3 className="text-lg font-bold text-gray-800 mb-4">📹 Выбери своё видео</h3>
+
+                      {/* Выбор видео из списка */}
+                      <select
+                        value={selectedVideoId || ''}
+                        onChange={(e) => setSelectedVideoId(Number(e.target.value))}
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl text-gray-700 mb-4 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+                      >
+                        <option value="">-- Выбери видео из списка --</option>
+                        {videos.map((video) => (
+                          <option key={video.id} value={video.id}>
+                            {video.title}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* Поле ставки */}
+                      <div className="mb-4">
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          💎 Твоя ставка (токены)
+                        </label>
+                        <input
+                          type="number"
+                          min={FEATURED_MIN_BID}
+                          value={bidAmount}
+                          onChange={(e) => setBidAmount(Number(e.target.value))}
+                          className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+                        />
+                      </div>
+
+                      {/* Кнопка размещения */}
+                      <button
+                        onClick={() => selectedVideoId && handleBidForFeatured(selectedVideoId, bidAmount)}
+                        disabled={!selectedVideoId || bidAmount < FEATURED_MIN_BID}
+                        className="w-full py-4 px-6 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold text-lg rounded-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
+                      >
+                        <span>👑</span>
+                        <span>Разместить на главной</span>
+                      </button>
+
+                      <p className="text-xs text-gray-500 mt-3 text-center">
+                        Видео будет на главной {FEATURED_DURATION_HOURS} часа
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
