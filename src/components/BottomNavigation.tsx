@@ -12,6 +12,7 @@ type NavigationItem = {
 const navigationItems: NavigationItem[] = [
   { name: 'Главная', path: '/', icon: '🏠' },
   { name: 'Мои видео', path: '/my-videos', icon: '🎬' },
+  { name: 'Топ дня', path: '/popular', icon: '🔥' },
   { name: 'Баланс', path: '/balance', icon: '💎' },
   { name: 'Заработать', path: '/referral', icon: '💰' },
 ];

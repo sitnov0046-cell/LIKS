@@ -1,4 +1,4 @@
-#!/bin/bash
+ну#!/bin/bash
 
 # Обновляем систему
 apt update && apt upgrade -y

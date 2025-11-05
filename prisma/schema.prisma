@@ -30,6 +30,20 @@ model Video {
   createdAt   DateTime @default(now())
   userId      Int
   user        User     @relation(fields: [userId], references: [id])
+
+  // Поля для публичной галереи
+  isPublic    Boolean  @default(false) // Опубликовано ли видео в галерее
+  votes       Vote[]   // Голоса за видео
+  votesCount  Int      @default(0)     // Кэш количества голосов
+
+  // Поля для аукциона "Видео дня"
+  isFeatured  Boolean  @default(false) // Находится ли на главной позиции
+  currentBid  Int      @default(0)     // Текущая ставка в токенах
+  featuredAt  DateTime? // Когда было поставлено на главную
+  featuredUntil DateTime? // До какого времени будет на главной (24 часа)
+
+  @@index([isPublic, votesCount])
+  @@index([isFeatured, featuredUntil])
 }
 
 // Модель реферальной системы
@@ -53,4 +67,16 @@ model Transaction {
 
   @@index([userId])
   @@index([createdAt])
+}
+
+// Модель голосования за видео
+model Vote {
+  id          Int      @id @default(autoincrement())
+  videoId     Int
+  userId      Int
+  createdAt   DateTime @default(now())
+  video       Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@unique([videoId, userId]) // Один пользователь может проголосовать за видео только один раз
+  @@index([videoId])
 }
