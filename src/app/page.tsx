@@ -16,7 +16,7 @@ export default function Home() {
     videos: 7,
     referrals: 3
   };
-  const [userInfo, setUserInfo] = useState<{ username?: string; photoUrl?: string; balance?: number }>({});
+  const [userInfo, setUserInfo] = useState<{ username?: string; photoUrl?: string; balance?: number; videosCount?: number; referralsCount?: number }>({});
   const [showForm, setShowForm] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [isContentReady, setIsContentReady] = useState(false);
@@ -33,10 +33,16 @@ export default function Home() {
         photoUrl: (webApp.initDataUnsafe.user as any).photo_url || undefined
       }));
       try {
-        const res = await fetch(`/api/transactions?telegramId=${telegramId}`);
-        if (res.ok) {
-          const data = await res.json();
-          setUserInfo((prev) => ({ ...prev, balance: data.balance }));
+        // Загружаем статистику пользователя
+        const statsRes = await fetch(`/api/user/stats?telegramId=${telegramId}`);
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          setUserInfo((prev) => ({
+            ...prev,
+            balance: statsData.balance,
+            videosCount: statsData.videosCount,
+            referralsCount: statsData.referralsCount
+          }));
         }
       } catch {}
     };
@@ -89,25 +95,25 @@ export default function Home() {
               Создавайте потрясающие видео с помощью ИИ и делитесь ими с друзьями
             </p>
 
-            {/* DEMO: Блок информации о пользователе (стилизованный) */}
+            {/* Блок информации о пользователе */}
             <div className="relative flex items-center gap-5 bg-white/80 rounded-3xl shadow-xl p-5 my-5 border-2 border-transparent bg-clip-padding animate-fadeIn">
-              {mockUser.photoUrl ? (
-                <img src={mockUser.photoUrl} alt="avatar" className="w-16 h-16 rounded-full border-4 border-white shadow-lg object-cover transition-transform duration-300 hover:scale-105" />
+              {userInfo.photoUrl || mockUser.photoUrl ? (
+                <img src={userInfo.photoUrl || mockUser.photoUrl} alt="avatar" className="w-16 h-16 rounded-full border-4 border-white shadow-lg object-cover transition-transform duration-300 hover:scale-105" />
               ) : (
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-3xl font-bold text-gray-600 border-4 border-white shadow-lg">
-                  {mockUser.username[0]?.toUpperCase()}
+                  {(userInfo.username || mockUser.username)[0]?.toUpperCase()}
                 </div>
               )}
               <div className="flex flex-col justify-center gap-1">
-                <span className="font-bold text-xl text-gray-800 tracking-wide drop-shadow-sm">@{mockUser.username}</span>
+                <span className="font-bold text-xl text-gray-800 tracking-wide drop-shadow-sm">@{userInfo.username || mockUser.username}</span>
                 <span className="text-gray-500 text-base">Токенов:
-                  <span className="ml-2 font-bold text-blue-700">{mockUser.tokens}</span>
+                  <span className="ml-2 font-bold text-blue-700">{userInfo.balance ?? mockUser.tokens}</span>
                 </span>
                 <span className="text-gray-500 text-base">Сгенерировано видео:
-                  <span className="ml-2 font-bold text-blue-700">{mockUser.videos}</span>
+                  <span className="ml-2 font-bold text-blue-700">{userInfo.videosCount ?? mockUser.videos}</span>
                 </span>
                 <span className="text-gray-500 text-base">Приглашено рефералов:
-                  <span className="ml-2 font-bold text-blue-700">{mockUser.referrals}</span>
+                  <span className="ml-2 font-bold text-blue-700">{userInfo.referralsCount ?? mockUser.referrals}</span>
                 </span>
               </div>
             </div>

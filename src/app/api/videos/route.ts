@@ -14,16 +14,9 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Получаем пользователя
+    // Получаем пользователя с видео
     const user = await prisma.user.findUnique({
-      where: { telegramId },
-      include: {
-        videos: {
-          orderBy: {
-            createdAt: 'desc'
-          }
-        }
-      }
+      where: { telegramId }
     });
 
     if (!user) {
@@ -33,13 +26,20 @@ export async function GET(request: Request) {
       );
     }
 
+    // Получаем видео отдельно
+    const userVideos = await prisma.video.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: 'desc' }
+    });
+
     // Преобразуем видео в нужный формат
-    const videos = user.videos.map(video => ({
-      id: video.id,
+    const videos = userVideos.map((video: any) => ({
+      id: video.id.toString(),
       title: video.title,
       thumbnail: video.thumbnailFileId, // Telegram File ID для превью
       url: `https://t.me/your_bot_username?start=video_${video.telegramFileId}`, // Ссылка на видео через бота
-      createdAt: video.createdAt
+      createdAt: video.createdAt.toISOString(),
+      isPublic: video.isPublic || false
     }));
 
     return NextResponse.json(videos);
