@@ -25,26 +25,45 @@ export default function Home() {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (!webApp?.initDataUnsafe?.user?.id) return;
+      // Отладка: проверяем наличие данных Telegram
+      console.log('WebApp данные:', webApp);
+      console.log('User ID:', webApp?.initDataUnsafe?.user?.id);
+
+      if (!webApp?.initDataUnsafe?.user?.id) {
+        console.log('Нет данных Telegram WebApp - используем моковые данные');
+        return;
+      }
+
       const telegramId = webApp.initDataUnsafe.user.id;
+      console.log('Загружаем данные для telegramId:', telegramId);
+
       setUserInfo((prev) => ({
         ...prev,
         username: webApp.initDataUnsafe.user.username,
         photoUrl: (webApp.initDataUnsafe.user as any).photo_url || undefined
       }));
+
       try {
         // Загружаем статистику пользователя
         const statsRes = await fetch(`/api/user/stats?telegramId=${telegramId}`);
+        console.log('Stats API response status:', statsRes.status);
+
         if (statsRes.ok) {
           const statsData = await statsRes.json();
+          console.log('Stats данные получены:', statsData);
           setUserInfo((prev) => ({
             ...prev,
             balance: statsData.balance,
             videosCount: statsData.videosCount,
             referralsCount: statsData.referralsCount
           }));
+        } else {
+          const error = await statsRes.json();
+          console.error('Ошибка получения статистики:', error);
         }
-      } catch {}
+      } catch (error) {
+        console.error('Исключение при загрузке статистики:', error);
+      }
     };
     fetchUserInfo();
   }, [webApp]);
