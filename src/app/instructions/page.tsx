@@ -160,7 +160,7 @@ export default function InstructionsPage() {
               в руках держит пакет семечек. <span className="font-bold text-blue-600">Стиль:</span> Яркий солнечный день,
               винтажная эстетика 1980-х годов, тёплые цвета. <span className="font-bold text-pink-600">Камера:</span> Плавно
               приближается к персонажу. <span className="font-bold text-green-600">Звук:</span> Женщина произносит:
-              "Здравствуйте, дорогие! Сегодня научу вас создавать видео с помощью нейросетей."
+              &ldquo;Здравствуйте, дорогие! Сегодня научу вас создавать видео с помощью нейросетей.&rdquo;
             </p>
           </div>
 
@@ -182,7 +182,7 @@ export default function InstructionsPage() {
           <div className="space-y-4">
             <div className="bg-purple-50 rounded-xl p-5 border-l-4 border-purple-500">
               <p className="font-bold text-purple-900 mb-2">Можно ли добавить фоновую музыку?</p>
-              <p className="text-gray-700">Да! Укажите в описании: "Музыка: жанр, темп (BPM)". Если нужно приглушить музыку под диалогом, добавьте "auto-duck".</p>
+              <p className="text-gray-700">Да! Укажите в описании: &ldquo;Музыка: жанр, темп (BPM)&rdquo;. Если нужно приглушить музыку под диалогом, добавьте &ldquo;auto-duck&rdquo;.</p>
             </div>
 
             <div className="bg-blue-50 rounded-xl p-5 border-l-4 border-blue-500">
