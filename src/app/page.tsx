@@ -29,24 +29,37 @@ export default function Home() {
         return;
       }
 
-      const telegramId = webApp.initDataUnsafe.user.id;
+      const user = webApp.initDataUnsafe.user;
+      const telegramId = user.id;
 
       setUserInfo((prev) => ({
         ...prev,
-        username: webApp.initDataUnsafe.user.username,
-        photoUrl: (webApp.initDataUnsafe.user as any).photo_url || undefined
+        username: user.username,
+        photoUrl: (user as any).photo_url || undefined
       }));
 
       try {
-        const statsRes = await fetch(`/api/user/stats?telegramId=${telegramId}`);
+        // Используем endpoint register, который автоматически создаёт пользователя если его нет
+        const registerRes = await fetch('/api/user/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            telegramId: telegramId,
+            username: user.username,
+            firstName: user.first_name,
+            lastName: user.last_name,
+          }),
+        });
 
-        if (statsRes.ok) {
-          const statsData = await statsRes.json();
+        if (registerRes.ok) {
+          const data = await registerRes.json();
           setUserInfo((prev) => ({
             ...prev,
-            balance: statsData.balance,
-            videosCount: statsData.videosCount,
-            referralsCount: statsData.referralsCount
+            balance: data.balance,
+            videosCount: data.videosCount,
+            referralsCount: data.referralsCount
           }));
         }
       } catch (error) {
