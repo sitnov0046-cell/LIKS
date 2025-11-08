@@ -78,6 +78,28 @@ export default function Home() {
     }
   }, []);
 
+  // Блокируем скролл во время показа splash screen
+  useEffect(() => {
+    if (showSplash) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = '0';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+    };
+  }, [showSplash]);
+
   const handleSplashFinish = () => {
     sessionStorage.setItem('hasSeenSplash', 'true');
     setShowSplash(false);

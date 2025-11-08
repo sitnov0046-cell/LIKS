@@ -14,6 +14,7 @@ model User {
   telegramId String  @unique
   username  String?
   balance   Int      @default(0)
+  firstDepositMade Boolean @default(false) // Флаг первого пополнения для бонуса х2
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   videos    Video[]
@@ -25,9 +26,20 @@ model User {
 model Video {
   id          Int      @id @default(autoincrement())
   title       String
-  telegramFileId String // ID файла в Telegram
+  prompt      String   // Описание для генерации
+  telegramFileId String? // ID файла в Telegram (null пока не сгенерировано)
   thumbnailFileId String? // ID превью в Telegram
+
+  // Параметры генерации
+  model       String   @default("sora-2") // Модель: "sora-2", "veo-3-fast"
+  duration    Int      @default(5) // Длительность в секундах: 5, 10, 15
+  tokensCost  Int      // Стоимость в токенах: 29, 49, 69
+  status      String   @default("pending") // pending, processing, completed, failed
+  errorMessage String? // Сообщение об ошибке если failed
+  kieJobId    String?  // ID задачи в KIE.AI для отслеживания
+
   createdAt   DateTime @default(now())
+  completedAt DateTime? // Когда генерация завершилась
   userId      Int
   user        User     @relation(fields: [userId], references: [id])
 
@@ -44,6 +56,8 @@ model Video {
 
   @@index([isPublic, votesCount])
   @@index([isFeatured, featuredUntil])
+  @@index([userId, status])
+  @@index([status, createdAt])
 }
 
 // Модель реферальной системы
@@ -53,6 +67,26 @@ model Referral {
   referredId  Int      // ID приглашенного пользователя
   createdAt   DateTime @default(now())
   referrer    User     @relation(fields: [referrerId], references: [id])
+}
+
+// Модель недельной статистики рефералов для лидерборда
+model WeeklyReferralStats {
+  id            Int      @id @default(autoincrement())
+  referrerId    Int      // ID реферера
+  weekStart     DateTime // Начало недели (понедельник 00:00)
+  weekEnd       DateTime // Конец недели (воскресенье 23:59)
+  newReferrals  Int      @default(0) // Количество НОВЫХ рефералов, приглашенных за эту неделю
+  totalSpending Int      @default(0) // Общая сумма трат ВСЕХ рефералов за неделю (и старых, и новых)
+  payoutAmount  Int      @default(0) // Сумма выплаты (рассчитывается в конце недели)
+  payoutPercent Int      @default(0) // Процент выплаты (15%, 13%, 11%, 10%)
+  leaderboardPosition Int? // Позиция в лидерборде (определяется по newReferrals)
+  isPaid        Boolean  @default(false) // Выплачено ли
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([referrerId, weekStart])
+  @@index([weekStart, newReferrals]) // Сортировка по количеству новых рефералов
+  @@index([isPaid, weekEnd])
 }
 
 // Модель истории транзакций

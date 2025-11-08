@@ -188,9 +188,9 @@ export default function ReferralPage() {
       />
       <button
         onClick={copyReferralLink}
-        className="px-3 py-2 bg-white text-gray-900 rounded-xl font-semibold border border-gray-200 hover:bg-gray-50 transition-colors whitespace-nowrap text-sm"
+        className="px-6 py-2 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors whitespace-nowrap text-base shadow-md"
       >
-        {copiedLink ? '✓' : '📋'}
+        {copiedLink ? '✓ Скопировано' : '📋 Копировать'}
       </button>
     </div>
     <p className="text-gray-600 text-sm mb-1">Поделитесь этой ссылкой с друзьями в сообщениях или выложите в сторис, чтобы получать бонусы за их регистрацию!</p>
@@ -199,17 +199,23 @@ export default function ReferralPage() {
 
         {/* Лидерборд */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col mb-4">
             <h3 className="text-xl font-bold text-gray-800">🏆 Топ рефереров</h3>
             <span className="text-sm text-gray-500">Обновляется еженедельно</span>
           </div>
 
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4 mb-4 border-2 border-yellow-200">
-            <p className="text-sm text-gray-700 mb-2">
-              <span className="font-bold">Бонусные ставки:</span> 🥇 15% | 🥈 13% | 🥉 11% | Остальные 10%
+            <p className="text-sm text-gray-700 mb-3">
+              <span className="font-bold">Минимальные пороги для призовых мест:</span>
             </p>
-            <p className="text-xs text-gray-600">
-              Займите топ-3 места, чтобы получать больше за каждого реферала!
+            <div className="space-y-1 text-sm text-gray-700 mb-3">
+              <p>🥇 <span className="font-semibold">1 место (15%)</span> — минимум 10 новых рефералов/неделю</p>
+              <p>🥈 <span className="font-semibold">2 место (13%)</span> — минимум 7 новых рефералов/неделю</p>
+              <p>🥉 <span className="font-semibold">3 место (11%)</span> — минимум 5 новых рефералов/неделю</p>
+              <p>📊 <span className="font-semibold">Остальные (10%)</span> — от 1 нового реферала/неделю</p>
+            </div>
+            <p className="text-xs text-gray-600 italic">
+              Процент начисляется от всех трат рефералов. Каждую неделю счётчик обнуляется — все начинают заново!
             </p>
           </div>
 
