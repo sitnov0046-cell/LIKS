@@ -10,8 +10,20 @@ import { SplashScreen } from '@/components/SplashScreen';
 export default function Home() {
   const [userInfo, setUserInfo] = useState<{ username?: string; photoUrl?: string; balance?: number; videosCount?: number; referralsCount?: number; publicId?: string }>({});
   const [showForm, setShowForm] = useState(false);
-  const [showSplash, setShowSplash] = useState(true);
-  const [isContentReady, setIsContentReady] = useState(false);
+  const [showSplash, setShowSplash] = useState(() => {
+    // Проверяем сразу при инициализации
+    if (typeof window !== 'undefined') {
+      return !sessionStorage.getItem('hasSeenSplash');
+    }
+    return true;
+  });
+  const [isContentReady, setIsContentReady] = useState(() => {
+    // Если уже видели splash, контент сразу готов
+    if (typeof window !== 'undefined') {
+      return !!sessionStorage.getItem('hasSeenSplash');
+    }
+    return false;
+  });
   const { webApp } = useTelegramWebApp();
   const formRef = useRef<HTMLDivElement>(null);
 
@@ -61,15 +73,6 @@ export default function Home() {
     };
     fetchUserInfo();
   }, [webApp]);
-
-  useEffect(() => {
-    // Проверяем, показывали ли мы уже splash screen в этой сессии
-    const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
-    if (hasSeenSplash) {
-      setShowSplash(false);
-      setIsContentReady(true);
-    }
-  }, []);
 
   // Блокируем скролл во время показа splash screen
   useEffect(() => {
