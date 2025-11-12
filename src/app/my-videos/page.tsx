@@ -315,7 +315,7 @@ export default function MyVideosPage() {
                       ) : (
                         <>
                           <span className="text-base">🔥</span>
-                          <span>Добавить в "Топ дня" ({minBid} {minBid === 1 ? 'токен' : minBid >= 2 && minBid <= 4 ? 'токена' : 'токенов'})</span>
+                          <span>Добавить в &quot;Топ дня&quot; ({minBid} {minBid === 1 ? 'токен' : minBid >= 2 && minBid <= 4 ? 'токена' : 'токенов'})</span>
                         </>
                       )}
                     </button>
