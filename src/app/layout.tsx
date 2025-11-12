@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   description: 'Создавайте потрясающие видео с помощью ИИ в LIKS',
   other: {
     'telegram-web-app': 'https://telegram.org/js/telegram-web-app.js',
+    'cache-control': 'no-cache, no-store, must-revalidate',
+    'pragma': 'no-cache',
+    'expires': '0',
   },
 };
 
