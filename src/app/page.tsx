@@ -125,9 +125,9 @@ export default function Home() {
             <div className="relative flex flex-col items-center gap-2 bg-white/90 rounded-xl shadow-lg p-3 my-2 border border-blue-300 animate-fadeIn transition-all duration-300">
               <div className="flex items-center justify-center gap-3 w-full">
                 {userInfo.photoUrl ? (
-                  <img src={userInfo.photoUrl} alt="avatar" className="w-12 h-12 rounded-full border-2 border-white shadow object-cover" />
+                  <img src={userInfo.photoUrl} alt="avatar" className="w-14 h-14 rounded-full border-2 border-white shadow object-cover" />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-lg font-bold text-gray-600 border-2 border-white shadow">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-xl font-bold text-gray-600 border-2 border-white shadow">
                     {(userInfo.username || 'U')[0]?.toUpperCase()}
                   </div>
                 )}
