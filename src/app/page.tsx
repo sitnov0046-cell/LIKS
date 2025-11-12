@@ -131,37 +131,37 @@ export default function Home() {
             </p>
 
             {/* Блок информации о пользователе */}
-            <div className="relative flex flex-col items-center gap-4 sm:gap-5 bg-white/90 rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-6 my-3 sm:my-5 border-2 sm:border-4 border-blue-400 bg-clip-padding animate-fadeIn hover:shadow-2xl hover:border-blue-500 transition-all duration-300">
-              <div className="flex flex-col items-center gap-3 w-full">
+            <div className="relative flex flex-col items-center gap-3 sm:gap-4 bg-white/90 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 my-2 sm:my-3 border-2 border-blue-400 bg-clip-padding animate-fadeIn hover:shadow-2xl hover:border-blue-500 transition-all duration-300">
+              <div className="flex flex-col items-center gap-2 w-full">
                 {userInfo.photoUrl ? (
-                  <img src={userInfo.photoUrl} alt="avatar" className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-lg object-cover transition-transform duration-300 hover:scale-105" />
+                  <img src={userInfo.photoUrl} alt="avatar" className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-3 border-white shadow-lg object-cover transition-transform duration-300 hover:scale-105" />
                 ) : (
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-3xl sm:text-4xl font-bold text-gray-600 border-4 border-white shadow-lg">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-2xl sm:text-3xl font-bold text-gray-600 border-3 border-white shadow-lg">
                     {(userInfo.username || 'U')[0]?.toUpperCase()}
                   </div>
                 )}
-                <div className="flex flex-col items-center gap-2 w-full">
-                  <span className="font-bold text-lg sm:text-2xl text-gray-800 tracking-wide drop-shadow-sm">@{userInfo.username || 'username'}</span>
+                <div className="flex flex-col items-center gap-1 w-full">
+                  <span className="font-bold text-base sm:text-xl text-gray-800 tracking-wide drop-shadow-sm">@{userInfo.username || 'username'}</span>
                   {userInfo.publicId && (
-                    <div className="bg-purple-50 px-4 py-2 rounded-xl border-2 border-purple-200">
-                      <span className="text-gray-600 text-sm sm:text-base">Ваш ID: </span>
-                      <span className="font-mono font-bold text-purple-600 text-base sm:text-lg">{userInfo.publicId}</span>
+                    <div className="bg-purple-50 px-3 py-1 rounded-lg border border-purple-200">
+                      <span className="text-gray-600 text-xs sm:text-sm">ID: </span>
+                      <span className="font-mono font-bold text-purple-600 text-xs sm:text-sm">{userInfo.publicId}</span>
                     </div>
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-4 sm:gap-6 w-full text-center pt-2 border-t-2 border-gray-100">
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 w-full text-center pt-2 border-t border-gray-100">
                 <div className="flex flex-col">
-                  <span className="text-gray-500 text-xs sm:text-sm mb-1">Токенов</span>
-                  <span className="font-bold text-blue-700 text-lg sm:text-2xl">{userInfo.balance ?? 0}</span>
+                  <span className="text-gray-500 text-xs mb-1">Токенов</span>
+                  <span className="font-bold text-blue-700 text-base sm:text-xl">{userInfo.balance ?? 0}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-gray-500 text-xs sm:text-sm mb-1">Видео</span>
-                  <span className="font-bold text-blue-700 text-lg sm:text-2xl">{userInfo.videosCount ?? 0}</span>
+                  <span className="text-gray-500 text-xs mb-1">Видео</span>
+                  <span className="font-bold text-blue-700 text-base sm:text-xl">{userInfo.videosCount ?? 0}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-gray-500 text-xs sm:text-sm mb-1">Рефералов</span>
-                  <span className="font-bold text-blue-700 text-lg sm:text-2xl">{userInfo.referralsCount ?? 0}</span>
+                  <span className="text-gray-500 text-xs mb-1">Рефералов</span>
+                  <span className="font-bold text-blue-700 text-base sm:text-xl">{userInfo.referralsCount ?? 0}</span>
                 </div>
               </div>
             </div>
