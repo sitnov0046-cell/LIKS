@@ -14,7 +14,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate, max-age=0',
+            value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
           },
           {
             key: 'Pragma',
@@ -23,6 +23,19 @@ const nextConfig = {
           {
             key: 'Expires',
             value: '0',
+          },
+          {
+            key: 'Surrogate-Control',
+            value: 'no-store',
+          },
+        ],
+      },
+      {
+        source: '/_next/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, max-age=0',
           },
         ],
       },
