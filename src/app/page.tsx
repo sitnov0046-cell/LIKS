@@ -6,7 +6,6 @@ import { useTelegramWebApp } from '@/hooks/useTelegramWebApp';
 import { DemoVideo } from '@/components/DemoVideo';
 import GenerationForm from '@/components/GenerationForm';
 import { SplashScreen } from '@/components/SplashScreen';
-import { BottomNavigation } from '@/components/BottomNavigation';
 
 export default function Home() {
   const [userInfo, setUserInfo] = useState<{ username?: string; photoUrl?: string; balance?: number; videosCount?: number; referralsCount?: number; publicId?: string }>({});
@@ -266,8 +265,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      <BottomNavigation />
     </>
   );
 }

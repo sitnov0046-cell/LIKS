@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useTelegramWebApp } from '@/hooks/useTelegramWebApp';
-import { BottomNavigation } from '@/components/BottomNavigation';
 import { FEATURED_MIN_BID, FEATURED_DURATION_HOURS } from '@/lib/constants';
 
 interface Video {
@@ -326,8 +325,6 @@ export default function PopularVideosPage() {
           )}
         </div>
       </div>
-
-      <BottomNavigation />
     </div>
   );
 }

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useTelegramWebApp } from '@/hooks/useTelegramWebApp';
-import { BottomNavigation } from '@/components/BottomNavigation';
 
 interface Transaction {
   id: number;
@@ -234,8 +233,6 @@ export default function BalancePage() {
           )}
         </div>
       </div>
-
-      <BottomNavigation />
     </div>
   );
 }

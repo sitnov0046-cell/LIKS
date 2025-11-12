@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useTelegramWebApp } from '@/hooks/useTelegramWebApp';
-import { BottomNavigation } from '@/components/BottomNavigation';
 import { TOKEN_PACKAGES } from '@/config/video-tariffs';
 
 interface PricingPlan {
@@ -359,8 +358,6 @@ export default function PricingPage() {
           </div>
         </div>
       </div>
-
-      <BottomNavigation />
     </div>
   );
 }
