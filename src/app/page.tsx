@@ -122,37 +122,37 @@ export default function Home() {
             </p>
 
             {/* Блок информации о пользователе */}
-            <div className="relative flex flex-col items-center gap-3 sm:gap-4 bg-white/90 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 my-2 sm:my-3 border-2 border-blue-400 bg-clip-padding animate-fadeIn hover:shadow-2xl hover:border-blue-500 transition-all duration-300">
-              <div className="flex flex-col items-center gap-2 w-full">
+            <div className="relative flex flex-col items-center gap-2 bg-white/90 rounded-xl shadow-lg p-3 my-2 border border-blue-300 animate-fadeIn transition-all duration-300">
+              <div className="flex items-center gap-3 w-full">
                 {userInfo.photoUrl ? (
-                  <img src={userInfo.photoUrl} alt="avatar" className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-3 border-white shadow-lg object-cover transition-transform duration-300 hover:scale-105" />
+                  <img src={userInfo.photoUrl} alt="avatar" className="w-12 h-12 rounded-full border-2 border-white shadow object-cover" />
                 ) : (
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-2xl sm:text-3xl font-bold text-gray-600 border-3 border-white shadow-lg">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-xl font-bold text-gray-600 border-2 border-white shadow">
                     {(userInfo.username || 'U')[0]?.toUpperCase()}
                   </div>
                 )}
-                <div className="flex flex-col items-center gap-1 w-full">
-                  <span className="font-bold text-base sm:text-xl text-gray-800 tracking-wide drop-shadow-sm">@{userInfo.username || 'username'}</span>
+                <div className="flex-1 flex flex-col gap-0.5">
+                  <span className="font-bold text-sm text-gray-800">@{userInfo.username || 'username'}</span>
                   {userInfo.publicId && (
-                    <div className="bg-purple-50 px-3 py-1 rounded-lg border border-purple-200">
-                      <span className="text-gray-600 text-xs sm:text-sm">ID: </span>
-                      <span className="font-mono font-bold text-purple-600 text-xs sm:text-sm">{userInfo.publicId}</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-gray-500 text-xs">ID:</span>
+                      <span className="font-mono font-semibold text-purple-600 text-xs">{userInfo.publicId}</span>
                     </div>
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-3 sm:gap-4 w-full text-center pt-2 border-t border-gray-100">
+              <div className="grid grid-cols-3 gap-2 w-full text-center pt-2 border-t border-gray-100">
                 <div className="flex flex-col">
-                  <span className="text-gray-500 text-xs mb-1">Токенов</span>
-                  <span className="font-bold text-blue-700 text-base sm:text-xl">{userInfo.balance ?? 0}</span>
+                  <span className="text-gray-500 text-xs">Токенов</span>
+                  <span className="font-bold text-blue-700 text-sm">{userInfo.balance ?? 0}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-gray-500 text-xs mb-1">Видео</span>
-                  <span className="font-bold text-blue-700 text-base sm:text-xl">{userInfo.videosCount ?? 0}</span>
+                  <span className="text-gray-500 text-xs">Видео</span>
+                  <span className="font-bold text-blue-700 text-sm">{userInfo.videosCount ?? 0}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-gray-500 text-xs mb-1">Рефералов</span>
-                  <span className="font-bold text-blue-700 text-base sm:text-xl">{userInfo.referralsCount ?? 0}</span>
+                  <span className="text-gray-500 text-xs">Рефералов</span>
+                  <span className="font-bold text-blue-700 text-sm">{userInfo.referralsCount ?? 0}</span>
                 </div>
               </div>
             </div>
