@@ -123,18 +123,18 @@ export default function Home() {
 
             {/* Блок информации о пользователе */}
             <div className="relative flex flex-col items-center gap-2 bg-white/90 rounded-xl shadow-lg p-3 my-2 border border-blue-300 animate-fadeIn transition-all duration-300">
-              <div className="flex flex-col items-center gap-2 w-full">
+              <div className="flex items-center justify-center gap-3 w-full">
                 {userInfo.photoUrl ? (
-                  <img src={userInfo.photoUrl} alt="avatar" className="w-14 h-14 rounded-full border-2 border-white shadow object-cover" />
+                  <img src={userInfo.photoUrl} alt="avatar" className="w-12 h-12 rounded-full border-2 border-white shadow object-cover" />
                 ) : (
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-xl font-bold text-gray-600 border-2 border-white shadow">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-lg font-bold text-gray-600 border-2 border-white shadow">
                     {(userInfo.username || 'U')[0]?.toUpperCase()}
                   </div>
                 )}
                 <div className="flex flex-col items-center gap-1">
                   <span className="font-bold text-sm text-gray-800">@{userInfo.username || 'username'}</span>
                   {userInfo.publicId && (
-                    <div className="bg-purple-50 px-3 py-1 rounded-lg border border-purple-200">
+                    <div className="bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200">
                       <span className="text-gray-500 text-xs">ID: </span>
                       <span className="font-mono font-bold text-purple-600 text-sm">{userInfo.publicId}</span>
                     </div>
