@@ -10,20 +10,8 @@ import { SplashScreen } from '@/components/SplashScreen';
 export default function Home() {
   const [userInfo, setUserInfo] = useState<{ username?: string; photoUrl?: string; balance?: number; videosCount?: number; referralsCount?: number; publicId?: string }>({});
   const [showForm, setShowForm] = useState(false);
-  const [showSplash, setShowSplash] = useState(() => {
-    // Проверяем сразу при инициализации
-    if (typeof window !== 'undefined') {
-      return !sessionStorage.getItem('hasSeenSplash');
-    }
-    return true;
-  });
-  const [isContentReady, setIsContentReady] = useState(() => {
-    // Если уже видели splash, контент сразу готов
-    if (typeof window !== 'undefined') {
-      return !!sessionStorage.getItem('hasSeenSplash');
-    }
-    return false;
-  });
+  const [showSplash, setShowSplash] = useState(false);
+  const [isContentReady, setIsContentReady] = useState(true);
   const { webApp } = useTelegramWebApp();
   const formRef = useRef<HTMLDivElement>(null);
 
