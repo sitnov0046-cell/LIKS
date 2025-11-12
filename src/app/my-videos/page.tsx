@@ -25,45 +25,8 @@ export default function MyVideosPage() {
       try {
         const userId = webApp?.initDataUnsafe?.user?.id;
 
-        // Если нет userId (демо режим), показываем примеры
         if (!userId) {
-          // ДЕМО: Примеры видео для демонстрации функционала
-          const demoVideos: Video[] = [
-            {
-              id: 'demo-1',
-              title: 'Путешествие по Марсу',
-              thumbnail: 'https://picsum.photos/seed/mars/400/225',
-              url: '#',
-              createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-              isPublic: true,
-            },
-            {
-              id: 'demo-2',
-              title: 'Подводный мир океана',
-              thumbnail: 'https://picsum.photos/seed/ocean/400/225',
-              url: '#',
-              createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-              isPublic: false,
-            },
-            {
-              id: 'demo-3',
-              title: 'Ночной город в неоновых огнях',
-              thumbnail: 'https://picsum.photos/seed/city/400/225',
-              url: '#',
-              createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-              isPublic: false,
-            },
-            {
-              id: 'demo-4',
-              title: 'Рассвет в горах',
-              thumbnail: 'https://picsum.photos/seed/mountains/400/225',
-              url: '#',
-              createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-              isPublic: false,
-            },
-          ];
-
-          setVideos(demoVideos);
+          setVideos([]);
           setIsLoading(false);
           return;
         }
