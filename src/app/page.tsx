@@ -193,7 +193,11 @@ export default function Home() {
             </div>
           )}
 
-          {/* Особенности */}
+          {/* Демо-видео */}
+          <div className="my-8 sm:my-12">
+            <DemoVideo src="/videos/Видео 1.mp4" />
+          </div>
+
           {/* Новости */}
           <div className="my-12 sm:my-16">
             <h2 className="text-lg sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">📰 Новости и обновления</h2>
