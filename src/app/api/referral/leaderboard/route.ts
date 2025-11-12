@@ -60,6 +60,7 @@ export async function GET(request: NextRequest) {
             username: true,
             telegramId: true,
             publicId: true,
+            photoUrl: true,
           },
         });
 
@@ -72,9 +73,12 @@ export async function GET(request: NextRequest) {
           position,
           referrer: referrer
             ? {
+                // username для узнаваемости
                 username: referrer.username || `User${referrer.telegramId}`,
+                // telegramId для определения текущего пользователя (не отображается в UI)
                 telegramId: referrer.telegramId,
-                publicId: referrer.publicId || 'N/A',
+                // photoUrl для отображения аватара
+                photoUrl: referrer.photoUrl,
               }
             : null,
           newReferrals: stat.newReferrals, // Количество новых рефералов за эту неделю

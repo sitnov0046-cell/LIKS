@@ -28,7 +28,7 @@ async function generateUniquePublicId(): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    const { telegramId, username, firstName, lastName } = await request.json();
+    const { telegramId, username, firstName, lastName, photoUrl } = await request.json();
 
     if (!telegramId) {
       return NextResponse.json(
@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
         data: {
           telegramId: String(telegramId),
           username: username || null,
+          photoUrl: photoUrl || null,
           publicId,
           balance: 0,
         },
@@ -62,6 +63,18 @@ export async function POST(request: NextRequest) {
           referrals: true,
         },
       });
+    } else {
+      // Обновляем photoUrl, если он изменился
+      if (photoUrl && user.photoUrl !== photoUrl) {
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: { photoUrl },
+          include: {
+            videos: true,
+            referrals: true,
+          },
+        });
+      }
     }
 
     // Возвращаем данные пользователя

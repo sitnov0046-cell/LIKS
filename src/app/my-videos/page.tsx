@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTelegramWebApp } from '@/hooks/useTelegramWebApp';
-import { PUBLISH_VIDEO_COST } from '@/lib/constants';
 
 interface Video {
   id: string;
@@ -18,16 +17,66 @@ export default function MyVideosPage() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [publishingVideoId, setPublishingVideoId] = useState<string | null>(null);
+  const [minBid, setMinBid] = useState<number>(2);
   const { webApp } = useTelegramWebApp();
 
   useEffect(() => {
-    // TODO: Загрузка видео пользователя с сервера
     const fetchVideos = async () => {
       try {
         const userId = webApp?.initDataUnsafe?.user?.id;
-        const response = await fetch(`/api/videos?userId=${userId}`);
-        const data = await response.json();
-        setVideos(data);
+
+        // Если нет userId (демо режим), показываем примеры
+        if (!userId) {
+          // ДЕМО: Примеры видео для демонстрации функционала
+          const demoVideos: Video[] = [
+            {
+              id: 'demo-1',
+              title: 'Путешествие по Марсу',
+              thumbnail: 'https://picsum.photos/seed/mars/400/225',
+              url: '#',
+              createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+              isPublic: true,
+            },
+            {
+              id: 'demo-2',
+              title: 'Подводный мир океана',
+              thumbnail: 'https://picsum.photos/seed/ocean/400/225',
+              url: '#',
+              createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+              isPublic: false,
+            },
+            {
+              id: 'demo-3',
+              title: 'Ночной город в неоновых огнях',
+              thumbnail: 'https://picsum.photos/seed/city/400/225',
+              url: '#',
+              createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+              isPublic: false,
+            },
+            {
+              id: 'demo-4',
+              title: 'Рассвет в горах',
+              thumbnail: 'https://picsum.photos/seed/mountains/400/225',
+              url: '#',
+              createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+              isPublic: false,
+            },
+          ];
+
+          setVideos(demoVideos);
+          setIsLoading(false);
+          return;
+        }
+
+        // Загрузка видео
+        const videosResponse = await fetch(`/api/videos?userId=${userId}`);
+        const videosData = await videosResponse.json();
+        setVideos(videosData);
+
+        // Загрузка информации о минимальной ставке
+        const featuredResponse = await fetch('/api/videos/featured');
+        const featuredData = await featuredResponse.json();
+        setMinBid(featuredData.minBid || 2);
       } catch (error) {
         console.error('Ошибка при загрузке видео:', error);
       } finally {
@@ -41,18 +90,112 @@ export default function MyVideosPage() {
   const handlePublishVideo = async (videoId: string) => {
     try {
       setPublishingVideoId(videoId);
-      // TODO: API для публикации видео
-      alert(`Видео будет опубликовано в галерею за ${PUBLISH_VIDEO_COST} токен! (Функция будет реализована)`);
+      const telegramId = webApp?.initDataUnsafe?.user?.id;
 
-      // Обновляем статус видео локально
-      setVideos(videos.map(v =>
-        v.id === videoId ? { ...v, isPublic: true } : v
-      ));
+      // ДЕМО режим: просто обновляем локально
+      if (!telegramId || videoId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 800)); // Имитация задержки сети
+        setVideos(videos.map(v =>
+          v.id === videoId ? { ...v, isPublic: true } : v
+        ));
+        alert('🎉 Видео опубликовано в рейтинге!\n(Демо режим - изменения не сохранятся)');
+        setPublishingVideoId(null);
+        return;
+      }
+
+      const response = await fetch(`/api/videos/${videoId}/publish`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ telegramId, bidAmount: minBid }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Обновляем статус видео локально
+        setVideos(videos.map(v =>
+          v.id === videoId ? { ...v, isPublic: true } : v
+        ));
+        // Обновляем минимальную ставку
+        const featuredResponse = await fetch('/api/videos/featured');
+        const featuredData = await featuredResponse.json();
+        setMinBid(featuredData.minBid || 2);
+        alert(`Видео размещено в "Топ дня"!`);
+      } else {
+        alert(data.error || data.message || 'Ошибка при публикации видео');
+      }
     } catch (error) {
+      console.error('Error publishing video:', error);
       alert('Ошибка при публикации видео');
     } finally {
       setPublishingVideoId(null);
     }
+  };
+
+  const handleUnpublishVideo = async (videoId: string) => {
+    try {
+      setPublishingVideoId(videoId);
+      const telegramId = webApp?.initDataUnsafe?.user?.id;
+
+      // ДЕМО режим: просто обновляем локально
+      if (!telegramId || videoId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 800)); // Имитация задержки сети
+        setVideos(videos.map(v =>
+          v.id === videoId ? { ...v, isPublic: false } : v
+        ));
+        alert('✅ Видео снято с публичного рейтинга\n(Демо режим - изменения не сохранятся)');
+        setPublishingVideoId(null);
+        return;
+      }
+
+      const response = await fetch(`/api/videos/${videoId}/publish?telegramId=${telegramId}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Обновляем статус видео локально
+        setVideos(videos.map(v =>
+          v.id === videoId ? { ...v, isPublic: false } : v
+        ));
+        alert('Видео снято с публичного рейтинга');
+      } else {
+        alert(data.error || 'Ошибка при снятии видео с публикации');
+      }
+    } catch (error) {
+      console.error('Error unpublishing video:', error);
+      alert('Ошибка при снятии видео с публикации');
+    } finally {
+      setPublishingVideoId(null);
+    }
+  };
+
+  const handleDownloadVideo = (video: Video) => {
+    // В демо режиме показываем уведомление
+    if (video.id.startsWith('demo-')) {
+      alert('📥 Функция скачивания доступна только для реальных видео');
+      return;
+    }
+
+    // Открываем видео в новой вкладке - браузер предложит скачать
+    window.open(video.url, '_blank');
+  };
+
+  const handleShareVideo = (video: Video) => {
+    // В демо режиме показываем уведомление
+    if (video.id.startsWith('demo-')) {
+      alert('📤 Функция отправки доступна только для реальных видео');
+      return;
+    }
+
+    // Используем Telegram share URL для отправки видео
+    const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(video.url)}&text=${encodeURIComponent(video.title)}`;
+
+    // Открываем в новой вкладке
+    window.open(shareUrl, '_blank');
   };
 
   if (isLoading) {
@@ -82,60 +225,97 @@ export default function MyVideosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 animate-gradient bg-300% pb-24">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">🎬 Мои видео</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 animate-gradient bg-300% pb-20">
+      <div className="container mx-auto px-3 py-4 max-w-6xl">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800">🎬 Мои видео</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
           {videos.map((video) => (
             <div
               key={video.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+              className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg active:shadow-xl transition-shadow"
             >
-              <div className="aspect-video relative">
+              <a
+                href={video.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block aspect-video relative cursor-pointer group active:opacity-90 transition-opacity"
+              >
                 <img
                   src={video.thumbnail}
                   alt={video.title}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold mb-2 text-gray-800">{video.title}</h3>
-                <div className="flex flex-col gap-3">
+                {/* Play button - видим всегда на мобильных */}
+                <div className="absolute inset-0 flex items-center justify-center sm:opacity-0 sm:group-hover:opacity-100 transition-opacity bg-black/20">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
+                    <svg className="w-7 h-7 sm:w-8 sm:h-8 text-gray-800 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                </div>
+              </a>
+              <div className="p-3 sm:p-4">
+                <h3 className="text-base sm:text-lg font-semibold mb-2 text-gray-800 line-clamp-2">{video.title}</h3>
+                <div className="flex flex-col gap-2 sm:gap-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">
+                    <span className="text-xs sm:text-sm text-gray-500">
                       {new Date(video.createdAt).toLocaleDateString()}
                     </span>
-                    <a
-                      href={video.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:scale-105 transition-transform text-sm font-medium"
-                    >
-                      Открыть
-                    </a>
                   </div>
 
-                  {/* Кнопка публикации */}
+                  {/* Кнопки "Скачать" и "Поделиться" */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleDownloadVideo(video)}
+                      className="flex-1 py-2 px-2 sm:px-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-semibold text-xs sm:text-sm active:scale-95 transition-all flex items-center justify-center gap-1 sm:gap-2"
+                    >
+                      <span className="text-base">📥</span>
+                      <span>Скачать</span>
+                    </button>
+                    <button
+                      onClick={() => handleShareVideo(video)}
+                      className="flex-1 py-2 px-2 sm:px-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-semibold text-xs sm:text-sm active:scale-95 transition-all flex items-center justify-center gap-1 sm:gap-2"
+                    >
+                      <span className="text-base">✈️</span>
+                      <span>Поделиться</span>
+                    </button>
+                  </div>
+
+                  {/* Кнопка публикации/снятия с публикации */}
                   {video.isPublic ? (
-                    <div className="flex items-center justify-center gap-2 py-2 bg-green-50 rounded-lg border border-green-200">
-                      <span className="text-green-600 font-medium text-sm">✓ Опубликовано</span>
-                    </div>
+                    <button
+                      onClick={() => handleUnpublishVideo(video.id)}
+                      disabled={publishingVideoId === video.id}
+                      className="w-full py-2.5 sm:py-3 px-3 sm:px-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold text-xs sm:text-sm active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 sm:gap-2"
+                    >
+                      {publishingVideoId === video.id ? (
+                        <>
+                          <span className="animate-spin text-base">⏳</span>
+                          <span className="text-xs sm:text-sm">Снятие...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-base">✓</span>
+                          <span className="text-xs sm:text-sm">Опубликовано</span>
+                        </>
+                      )}
+                    </button>
                   ) : (
                     <button
                       onClick={() => handlePublishVideo(video.id)}
                       disabled={publishingVideoId === video.id}
-                      className="w-full py-2 px-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-semibold text-sm hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full py-2.5 sm:py-3 px-3 sm:px-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-semibold text-xs sm:text-sm active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 sm:gap-2"
                     >
                       {publishingVideoId === video.id ? (
                         <>
-                          <span className="animate-spin">⏳</span>
+                          <span className="animate-spin text-base">⏳</span>
                           <span>Публикация...</span>
                         </>
                       ) : (
                         <>
-                          <span>🔥</span>
-                          <span>Добавить в популярные ({PUBLISH_VIDEO_COST} токен)</span>
+                          <span className="text-base">🔥</span>
+                          <span>Добавить в "Топ дня" ({minBid} {minBid === 1 ? 'токен' : minBid >= 2 && minBid <= 4 ? 'токена' : 'токенов'})</span>
                         </>
                       )}
                     </button>

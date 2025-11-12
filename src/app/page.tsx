@@ -125,64 +125,64 @@ export default function Home() {
     <>
       {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
 
-      <main className={`min-h-screen bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 animate-gradient bg-300% flex items-center justify-center py-12 pb-24 transition-opacity duration-500 ${
+      <main className={`min-h-screen bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 animate-gradient bg-300% flex items-center justify-center py-6 sm:py-12 pb-20 sm:pb-24 transition-opacity duration-500 ${
         isContentReady ? 'opacity-100' : 'opacity-0'
       }`}>
-        <div className="container mx-auto px-5 max-w-4xl">
+        <div className="container mx-auto px-3 sm:px-5 max-w-4xl">
           {/* Блок с информацией о пользователе */}
           {/* Заголовок */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-3 whitespace-nowrap">
+          <div className="text-center mb-4 sm:mb-8">
+            <h1 className="text-xl sm:text-3xl font-bold text-gray-800 mb-2 sm:mb-3">
               Генератор видео - LIKS
             </h1>
-            <p className="text-gray-600 text-lg mb-6">
+            <p className="text-gray-600 text-sm sm:text-lg mb-4 sm:mb-6">
               Создавайте потрясающие видео с помощью ИИ и делитесь ими с друзьями
             </p>
 
             {/* Блок информации о пользователе */}
-            <div className="relative flex items-center gap-5 bg-white/90 rounded-3xl shadow-xl p-5 my-5 border-4 border-blue-400 bg-clip-padding animate-fadeIn hover:shadow-2xl hover:border-blue-500 transition-all duration-300">
+            <div className="relative flex items-center gap-3 sm:gap-5 bg-white/90 rounded-2xl sm:rounded-3xl shadow-xl p-3 sm:p-5 my-3 sm:my-5 border-2 sm:border-4 border-blue-400 bg-clip-padding animate-fadeIn hover:shadow-2xl hover:border-blue-500 transition-all duration-300">
               {userInfo.photoUrl || mockUser.photoUrl ? (
-                <img src={userInfo.photoUrl || mockUser.photoUrl} alt="avatar" className="w-16 h-16 rounded-full border-4 border-white shadow-lg object-cover transition-transform duration-300 hover:scale-105" />
+                <img src={userInfo.photoUrl || mockUser.photoUrl} alt="avatar" className="w-16 h-16 sm:w-24 sm:h-24 rounded-full border-2 sm:border-4 border-white shadow-lg object-cover transition-transform duration-300 hover:scale-105" />
               ) : (
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-3xl font-bold text-gray-600 border-4 border-white shadow-lg">
+                <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center text-2xl sm:text-4xl font-bold text-gray-600 border-2 sm:border-4 border-white shadow-lg">
                   {(userInfo.username || mockUser.username)[0]?.toUpperCase()}
                 </div>
               )}
-              <div className="flex flex-col justify-center gap-1">
-                <span className="font-bold text-xl text-gray-800 tracking-wide drop-shadow-sm">@{userInfo.username || mockUser.username}</span>
+              <div className="flex flex-col justify-center gap-0.5 sm:gap-1">
+                <span className="font-bold text-base sm:text-xl text-gray-800 tracking-wide drop-shadow-sm">@{userInfo.username || mockUser.username}</span>
                 {(userInfo.publicId || mockUser.publicId) && (
-                  <span className="text-gray-500 text-base">Ваш ID:
-                    <span className="ml-2 font-mono font-bold text-purple-600 text-lg">{userInfo.publicId || mockUser.publicId}</span>
+                  <span className="text-gray-500 text-xs sm:text-base">Ваш ID:
+                    <span className="ml-1 sm:ml-2 font-mono font-bold text-purple-600 text-sm sm:text-lg">{userInfo.publicId || mockUser.publicId}</span>
                   </span>
                 )}
-                <span className="text-gray-500 text-base">Токенов:
-                  <span className="ml-2 font-bold text-blue-700">{userInfo.balance ?? mockUser.tokens}</span>
+                <span className="text-gray-500 text-xs sm:text-base">Токенов:
+                  <span className="ml-1 sm:ml-2 font-bold text-blue-700">{userInfo.balance ?? mockUser.tokens}</span>
                 </span>
-                <span className="text-gray-500 text-base">Сгенерировано видео:
-                  <span className="ml-2 font-bold text-blue-700">{userInfo.videosCount ?? mockUser.videos}</span>
+                <span className="text-gray-500 text-xs sm:text-base">Сгенерировано видео:
+                  <span className="ml-1 sm:ml-2 font-bold text-blue-700">{userInfo.videosCount ?? mockUser.videos}</span>
                 </span>
-                <span className="text-gray-500 text-base">Приглашено рефералов:
-                  <span className="ml-2 font-bold text-blue-700">{userInfo.referralsCount ?? mockUser.referrals}</span>
+                <span className="text-gray-500 text-xs sm:text-base">Приглашено рефералов:
+                  <span className="ml-1 sm:ml-2 font-bold text-blue-700">{userInfo.referralsCount ?? mockUser.referrals}</span>
                 </span>
               </div>
             </div>
 
             {/* Демо видео */}
-            <div className="my-5">
+            <div className="my-3 sm:my-5">
               <DemoVideo
                 src="/videos/Видео 1.mp4"
-                className="mb-4 mx-auto max-w-2xl"
+                className="mb-3 sm:mb-4 mx-auto max-w-2xl"
               />
-              <p className="text-gray-500 text-sm italic mb-6">
+              <p className="text-gray-500 text-xs sm:text-sm italic mb-4 sm:mb-6">
                 Пример сгенерированного видео
               </p>
             </div>
 
             {/* Кнопки */}
-            <div className="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto my-5">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 max-w-2xl mx-auto my-3 sm:my-5">
               <button
                 onClick={handleCreateVideo}
-                className="flex-1 text-xl py-4 px-6 rounded-xl font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl flex items-center justify-center gap-2"
+                className="flex-1 text-base sm:text-xl py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl flex items-center justify-center gap-2"
               >
                 <span>✨</span>
                 <span>Создать видео</span>
@@ -190,7 +190,7 @@ export default function Home() {
 
               <Link
                 href="/instructions"
-                className="flex-1 text-xl py-4 px-6 rounded-xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl flex items-center justify-center gap-2"
+                className="flex-1 text-base sm:text-xl py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl flex items-center justify-center gap-2"
               >
                 <span>📖</span>
                 <span>Инструкция</span>
@@ -207,34 +207,34 @@ export default function Home() {
 
           {/* Особенности */}
           {/* Новости */}
-          <div className="my-5">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">📰 Новости и обновления</h2>
-            <div className="max-h-72 overflow-y-auto flex flex-col gap-4 pr-2 custom-scrollbar-news">
+          <div className="my-3 sm:my-5">
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">📰 Новости и обновления</h2>
+            <div className="max-h-72 overflow-y-auto flex flex-col gap-3 sm:gap-4 pr-1 sm:pr-2 custom-scrollbar-news">
               {/* Новость 1: Появление реферальной ссылки (NEW) */}
-              <div className="bg-white rounded-2xl shadow-lg p-4 border-l-4 border-blue-400 flex flex-col">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 border-l-2 sm:border-l-4 border-blue-400 flex flex-col">
                 <div className="flex items-center justify-between mb-1">
                   <span className="flex flex-col items-start gap-1">
                     <span className="flex items-center gap-2 mb-1">
-                      <span className="animate-fire text-2xl animate-pulse leading-none -mt-1">
+                      <span className="animate-fire text-xl sm:text-2xl animate-pulse leading-none -mt-1">
                         🔥
                       </span>
-                      <span className="text-black text-xl font-extrabold tracking-widest leading-none animate-fast-pulse" style={{letterSpacing: '0.12em'}}>NEW</span>
+                      <span className="text-black text-base sm:text-xl font-extrabold tracking-widest leading-none animate-fast-pulse" style={{letterSpacing: '0.12em'}}>NEW</span>
                     </span>
-                    <span className="text-base text-gray-800 font-semibold">Реферальная ссылка для друзей</span>
+                    <span className="text-sm sm:text-base text-gray-800 font-semibold">Реферальная ссылка для друзей</span>
                   </span>
                   <span className="text-xs text-gray-500 ml-2">05.11.2025</span>
                 </div>
-                <div className="text-gray-700 text-base">
+                <div className="text-gray-700 text-sm sm:text-base">
                   Теперь вы можете приглашать друзей по реферальной ссылке и получать бонусы за их активность! Делитесь ссылкой в соцсетях и мессенджерах, чтобы зарабатывать больше.
                 </div>
               </div>
               {/* Новость 2: Появление топа видео */}
-              <div className="bg-white rounded-2xl shadow-lg p-4 border-l-4 border-blue-400 flex flex-col">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 border-l-2 sm:border-l-4 border-blue-400 flex flex-col">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-semibold text-lg text-gray-800">Топ видео теперь доступен!</span>
+                  <span className="font-semibold text-base sm:text-lg text-gray-800">Топ видео теперь доступен!</span>
                   <span className="text-xs text-gray-500 ml-2">01.11.2025</span>
                 </div>
-                <div className="text-gray-700 text-base">
+                <div className="text-gray-700 text-sm sm:text-base">
                   В приложении появился новый раздел <b>Топ видео</b> — теперь вы можете смотреть лучшие работы пользователей, вдохновляться и делиться своими видео с другими! Попробуйте попасть в топ недели!
                 </div>
               </div>

@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
+/**
+ * GET /api/videos?userId={telegramId}
+ * Получить ЛИЧНЫЕ видео конкретного пользователя (для страницы "Мои видео")
+ * Возвращает ВСЕ видео пользователя независимо от статуса isPublic
+ */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const telegramId = searchParams.get('userId');
@@ -13,7 +18,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Получаем пользователя с видео
+    // Получаем пользователя
     const user = await prisma.user.findUnique({
       where: { telegramId }
     });
@@ -25,7 +30,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // Получаем видео отдельно
+    // Получаем ВСЕ видео пользователя (личные и публичные)
     const userVideos = await prisma.video.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: 'desc' }
@@ -38,7 +43,9 @@ export async function GET(request: Request) {
       thumbnail: video.thumbnailFileId, // Telegram File ID для превью
       url: `https://t.me/your_bot_username?start=video_${video.telegramFileId}`, // Ссылка на видео через бота
       createdAt: video.createdAt.toISOString(),
-      isPublic: video.isPublic || false
+      isPublic: video.isPublic || false,
+      status: video.status,
+      votesCount: video.votesCount || 0
     }));
 
     return NextResponse.json(videos);

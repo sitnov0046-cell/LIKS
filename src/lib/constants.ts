@@ -8,7 +8,7 @@ export const REFERRAL_BONUS = 10; // Бонус за приглашение ре
 // Аукцион "Видео дня"
 export const FEATURED_MIN_BID = 2; // Минимальная ставка для размещения на главной (в токенах)
 export const FEATURED_DURATION_HOURS = 24; // Длительность размещения на главной (в часах)
-export const PUBLISH_VIDEO_COST = 1; // Стоимость публикации видео в галерею (в токенах)
+export const PUBLISH_VIDEO_COST = 2; // Стоимость публикации видео в галерею (в токенах)
 
 // Типы транзакций
 export const TRANSACTION_TYPES = {

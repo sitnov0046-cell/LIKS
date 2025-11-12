@@ -160,64 +160,64 @@ export default function BalancePage() {
   const availableVideos = Math.floor(balance / TOKENS_PER_VIDEO);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 animate-gradient bg-300% pb-24">
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
+    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 animate-gradient bg-300% pb-20">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 max-w-2xl">
         {/* Заголовок */}
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Баланс</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-8">Баланс</h1>
 
         {/* Карточка баланса (оптимальное расположение) */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 mb-8 text-white shadow-lg flex flex-col items-center">
-          <div className="mb-6 text-center">
-            <p className="text-purple-100 text-3xl font-bold mb-2">Доступно токенов:</p>
-            <h2 className="text-5xl font-bold">{balance}</h2>
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl sm:rounded-2xl p-4 sm:p-8 mb-4 sm:mb-8 text-white shadow-lg flex flex-col items-center">
+          <div className="mb-4 sm:mb-6 text-center">
+            <p className="text-purple-100 text-xl sm:text-3xl font-bold mb-1 sm:mb-2">Доступно токенов:</p>
+            <h2 className="text-3xl sm:text-5xl font-bold">{balance}</h2>
           </div>
-          <div className="w-full bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6 flex items-center justify-center gap-3">
-            <div className="bg-white/20 rounded-full p-2">
-              <span className="text-2xl">🎬</span>
+          <div className="w-full bg-white/10 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 flex items-center justify-center gap-2 sm:gap-3">
+            <div className="bg-white/20 rounded-full p-1.5 sm:p-2">
+              <span className="text-xl sm:text-2xl">🎬</span>
             </div>
             <div className="text-center w-full">
-              <p className="text-white/80 text-base font-semibold mb-1">Этого хватит для генерации</p>
+              <p className="text-white/80 text-sm sm:text-base font-semibold mb-0.5 sm:mb-1">Этого хватит для генерации</p>
               <div className="flex items-center justify-center gap-2">
-                <span className="text-white font-bold text-2xl">{availableVideos}</span>
-                <span className="text-white font-bold text-2xl">видео</span>
+                <span className="text-white font-bold text-xl sm:text-2xl">{availableVideos}</span>
+                <span className="text-white font-bold text-xl sm:text-2xl">видео</span>
               </div>
             </div>
           </div>
           <button
             onClick={() => window.location.href = '/pricing'}
-            className="mt-2 bg-white text-purple-600 px-6 py-3 rounded-xl font-semibold hover:bg-purple-50 transition-colors w-full"
+            className="mt-2 bg-white text-purple-600 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold hover:bg-purple-50 active:bg-purple-50 transition-colors w-full text-sm sm:text-base"
           >
             Пополнить баланс
           </button>
         </div>
 
         {/* История транзакций */}
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="p-6 border-b border-gray-100">
-            <h3 className="text-xl font-semibold text-gray-800">История операций</h3>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+          <div className="p-4 sm:p-6 border-b border-gray-100">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-800">История операций</h3>
           </div>
 
           {transactions.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              <p className="text-lg mb-2">История пуста</p>
-              <p className="text-sm">Здесь будут отображаться все ваши операции</p>
+            <div className="p-6 sm:p-8 text-center text-gray-500">
+              <p className="text-base sm:text-lg mb-2">История пуста</p>
+              <p className="text-xs sm:text-sm">Здесь будут отображаться все ваши операции</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
               {transactions.map((transaction) => (
                 <div
                   key={transaction.id}
-                  className="p-6 hover:bg-gray-50 transition-colors"
+                  className="p-4 sm:p-6 hover:bg-gray-50 active:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-4">
-                      <div className="text-3xl">{getTransactionIcon(transaction.type)}</div>
-                      <div>
-                        <h4 className="font-semibold text-gray-800 mb-1">
+                    <div className="flex items-start gap-3 sm:gap-4 min-w-0 flex-1 mr-3">
+                      <div className="text-2xl sm:text-3xl flex-shrink-0">{getTransactionIcon(transaction.type)}</div>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-semibold text-sm sm:text-base text-gray-800 mb-0.5 sm:mb-1">
                           {getTransactionTitle(transaction.type)}
                         </h4>
                         {transaction.description && (
-                          <p className="text-sm text-gray-600 mb-1">
+                          <p className="text-xs sm:text-sm text-gray-600 mb-0.5 sm:mb-1 line-clamp-2">
                             {transaction.description}
                           </p>
                         )}
@@ -226,7 +226,7 @@ export default function BalancePage() {
                         </p>
                       </div>
                     </div>
-                    <div className={`font-bold text-lg ${
+                    <div className={`font-bold text-base sm:text-lg flex-shrink-0 ${
                       transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'
                     }`}>
                         {getTransactionTitle(transaction.type) === 'Пополнение' ? `${transaction.amount} Т` : transaction.amount}
