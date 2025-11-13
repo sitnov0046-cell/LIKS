@@ -11,7 +11,13 @@ import { StarryBackground } from '@/components/StarryBackground';
 
 export default function Home() {
   const searchParams = useSearchParams();
-  const [userInfo, setUserInfo] = useState<{ username?: string; photoUrl?: string; balance?: number; videosCount?: number; referralsCount?: number; publicId?: string }>({});
+  const [userInfo, setUserInfo] = useState<{ username?: string; photoUrl?: string; balance?: number; videosCount?: number; referralsCount?: number; publicId?: string }>({
+    username: 'username',
+    balance: 0,
+    videosCount: 0,
+    referralsCount: 0,
+    publicId: 'L000000'
+  });
   const [showForm, setShowForm] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
   const [isContentReady, setIsContentReady] = useState(true);
@@ -163,12 +169,10 @@ export default function Home() {
                 )}
                 <div className="flex flex-col items-center gap-1">
                   <span className="font-bold text-sm text-gray-800">@{userInfo.username || 'username'}</span>
-                  {userInfo.publicId && (
-                    <div className="bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200">
-                      <span className="text-gray-500 text-xs">ID: </span>
-                      <span className="font-mono font-bold text-purple-600 text-sm">{userInfo.publicId}</span>
-                    </div>
-                  )}
+                  <div className="bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200">
+                    <span className="text-gray-500 text-xs">ID: </span>
+                    <span className="font-mono font-bold text-purple-600 text-sm">{userInfo.publicId || 'L000000'}</span>
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-2 w-full text-center pt-2 border-t border-gray-100">

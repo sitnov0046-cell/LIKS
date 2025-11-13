@@ -212,7 +212,7 @@ export default function InstructionsPage() {
             Теперь вы знаете все секреты создания качественных видео. Экспериментируйте и творите!
           </p>
           <Link
-            href="/"
+            href="/?openForm=true"
             className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-white text-purple-600 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg transition-transform shadow-lg active:scale-95"
           >
             Начать создавать видео
