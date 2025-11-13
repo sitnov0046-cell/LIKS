@@ -11,9 +11,20 @@ interface Star {
   twinklePhase: number;
 }
 
+interface ShootingStar {
+  x: number;
+  y: number;
+  length: number;
+  speed: number;
+  opacity: number;
+  angle: number;
+}
+
 export function StarryBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<Star[]>([]);
+  const shootingStarsRef = useRef<ShootingStar[]>([]);
+  const lastShootingStarRef = useRef<number>(0);
   const animationFrameRef = useRef<number>();
 
   useEffect(() => {
@@ -39,8 +50,8 @@ export function StarryBackground() {
         stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          radius: Math.random() * 1.5 + 0.5, // Размер от 0.5 до 2
-          opacity: Math.random() * 0.5 + 0.5, // Яркость от 0.5 до 1
+          radius: Math.random() * 0.6 + 0.2, // Маленький размер от 0.2 до 0.8
+          opacity: Math.random() * 0.4 + 0.2, // Умеренная яркость от 0.2 до 0.6
           twinkleSpeed: Math.random() * 0.02 + 0.005, // Скорость мерцания
           twinklePhase: Math.random() * Math.PI * 2, // Фаза мерцания
         });
@@ -49,9 +60,30 @@ export function StarryBackground() {
       starsRef.current = stars;
     };
 
+    // Создание падающей звезды
+    const createShootingStar = () => {
+      const shootingStar: ShootingStar = {
+        x: Math.random() * canvas.width,
+        y: Math.random() * (canvas.height * 0.5), // Появляется в верхней половине
+        length: Math.random() * 80 + 40, // Длина от 40 до 120
+        speed: Math.random() * 3 + 2, // Скорость от 2 до 5
+        opacity: 0.3, // Ненавязчивая яркость
+        angle: Math.PI / 4, // Угол падения (45 градусов)
+      };
+      shootingStarsRef.current.push(shootingStar);
+    };
+
     // Анимация звёзд
     const animate = () => {
-      // Создаём голубой галактический фон с красивым градиентом
+      const currentTime = Date.now();
+
+      // Создаём падающую звезду каждые 5 секунд
+      if (currentTime - lastShootingStarRef.current > 5000) {
+        createShootingStar();
+        lastShootingStarRef.current = currentTime;
+      }
+
+      // Создаём тёмный космический фон с галактическим градиентом
       const bgGradient = ctx.createRadialGradient(
         canvas.width / 2,
         canvas.height / 2,
@@ -61,18 +93,18 @@ export function StarryBackground() {
         Math.max(canvas.width, canvas.height)
       );
 
-      // Центр - светлый голубой с переходом в синий
-      bgGradient.addColorStop(0, '#38bdf8'); // Яркий голубой (sky-400)
-      bgGradient.addColorStop(0.2, '#7dd3fc'); // Светлый голубой (sky-300)
-      bgGradient.addColorStop(0.4, '#0ea5e9'); // Средний голубой (sky-500)
-      bgGradient.addColorStop(0.6, '#0284c7'); // Тёмный голубой (sky-600)
-      bgGradient.addColorStop(0.8, '#0369a1'); // Очень тёмный голубой (sky-700)
-      bgGradient.addColorStop(1, '#075985'); // Глубокий синий (sky-800)
+      // Тёмный космический градиент с фиолетовыми оттенками
+      bgGradient.addColorStop(0, '#1e1b4b'); // Тёмно-фиолетовый центр (indigo-950)
+      bgGradient.addColorStop(0.3, '#312e81'); // Индиго-темный (indigo-900)
+      bgGradient.addColorStop(0.5, '#1e3a8a'); // Тёмно-синий (blue-900)
+      bgGradient.addColorStop(0.7, '#1e293b'); // Серо-синий (slate-800)
+      bgGradient.addColorStop(0.9, '#0f172a'); // Очень тёмный (slate-900)
+      bgGradient.addColorStop(1, '#020617'); // Почти черный (slate-950)
 
       ctx.fillStyle = bgGradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Добавляем голубые и бирюзовые туманности
+      // Добавляем фиолетовые и розовые туманности (галактические облака)
       const nebula1 = ctx.createRadialGradient(
         canvas.width * 0.3,
         canvas.height * 0.3,
@@ -81,9 +113,10 @@ export function StarryBackground() {
         canvas.height * 0.3,
         canvas.width * 0.4
       );
-      nebula1.addColorStop(0, 'rgba(34, 211, 238, 0.35)'); // Бирюзовый (cyan-400)
-      nebula1.addColorStop(0.5, 'rgba(103, 232, 249, 0.25)'); // Светлый бирюзовый (cyan-300)
-      nebula1.addColorStop(1, 'rgba(6, 182, 212, 0)');
+      nebula1.addColorStop(0, 'rgba(147, 51, 234, 0.25)'); // Фиолетовый (purple-600)
+      nebula1.addColorStop(0.4, 'rgba(168, 85, 247, 0.15)'); // Светлый фиолетовый (purple-500)
+      nebula1.addColorStop(0.7, 'rgba(192, 132, 252, 0.08)'); // Бледно-фиолетовый (purple-400)
+      nebula1.addColorStop(1, 'rgba(147, 51, 234, 0)');
       ctx.fillStyle = nebula1;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -95,10 +128,26 @@ export function StarryBackground() {
         canvas.height * 0.6,
         canvas.width * 0.5
       );
-      nebula2.addColorStop(0, 'rgba(59, 130, 246, 0.35)'); // Синий (blue-500)
-      nebula2.addColorStop(0.5, 'rgba(147, 197, 253, 0.25)'); // Светлый синий (blue-300)
-      nebula2.addColorStop(1, 'rgba(37, 99, 235, 0)');
+      nebula2.addColorStop(0, 'rgba(236, 72, 153, 0.2)'); // Розовый (pink-500)
+      nebula2.addColorStop(0.4, 'rgba(244, 114, 182, 0.12)'); // Светлый розовый (pink-400)
+      nebula2.addColorStop(0.7, 'rgba(249, 168, 212, 0.06)'); // Бледно-розовый (pink-300)
+      nebula2.addColorStop(1, 'rgba(236, 72, 153, 0)');
       ctx.fillStyle = nebula2;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Добавляем синие галактические туманности
+      const nebula3 = ctx.createRadialGradient(
+        canvas.width * 0.5,
+        canvas.height * 0.8,
+        0,
+        canvas.width * 0.5,
+        canvas.height * 0.8,
+        canvas.width * 0.35
+      );
+      nebula3.addColorStop(0, 'rgba(59, 130, 246, 0.18)'); // Синий (blue-500)
+      nebula3.addColorStop(0.5, 'rgba(96, 165, 250, 0.1)'); // Светлый синий (blue-400)
+      nebula3.addColorStop(1, 'rgba(59, 130, 246, 0)');
+      ctx.fillStyle = nebula3;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Рисуем звёзды
@@ -108,23 +157,60 @@ export function StarryBackground() {
         const twinkle = Math.sin(star.twinklePhase) * 0.3 + 0.7;
         const currentOpacity = star.opacity * twinkle;
 
-        // Рисуем звезду с эффектом свечения (более яркие на светлом фоне)
-        const glow = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.radius * 4);
-        glow.addColorStop(0, `rgba(255, 255, 255, ${currentOpacity * 0.9})`);
-        glow.addColorStop(0.3, `rgba(200, 230, 255, ${currentOpacity * 0.6})`);
-        glow.addColorStop(0.6, `rgba(180, 200, 255, ${currentOpacity * 0.3})`);
-        glow.addColorStop(1, 'rgba(180, 200, 255, 0)');
+        // Рисуем звезду с эффектом свечения (яркие на тёмном фоне)
+        const glow = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.radius * 5);
+        glow.addColorStop(0, `rgba(255, 255, 255, ${currentOpacity})`);
+        glow.addColorStop(0.2, `rgba(200, 220, 255, ${currentOpacity * 0.8})`);
+        glow.addColorStop(0.4, `rgba(180, 200, 255, ${currentOpacity * 0.5})`);
+        glow.addColorStop(0.7, `rgba(150, 180, 255, ${currentOpacity * 0.2})`);
+        glow.addColorStop(1, 'rgba(150, 180, 255, 0)');
 
         ctx.fillStyle = glow;
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius * 4, 0, Math.PI * 2);
+        ctx.arc(star.x, star.y, star.radius * 5, 0, Math.PI * 2);
         ctx.fill();
 
         // Яркое ядро звезды
-        ctx.fillStyle = `rgba(255, 255, 255, ${currentOpacity * 0.95})`;
+        ctx.fillStyle = `rgba(255, 255, 255, ${currentOpacity})`;
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius * 1.2, 0, Math.PI * 2);
+        ctx.arc(star.x, star.y, star.radius * 1.5, 0, Math.PI * 2);
         ctx.fill();
+      });
+
+      // Рисуем и обновляем падающие звёзды
+      shootingStarsRef.current = shootingStarsRef.current.filter((star) => {
+        // Обновляем позицию
+        star.x += Math.cos(star.angle) * star.speed;
+        star.y += Math.sin(star.angle) * star.speed;
+        star.opacity -= 0.003; // Постепенно исчезает
+
+        // Удаляем, если вышла за пределы или стала невидимой
+        if (star.opacity <= 0 || star.x > canvas.width || star.y > canvas.height) {
+          return false;
+        }
+
+        // Рисуем падающую звезду
+        const gradient = ctx.createLinearGradient(
+          star.x,
+          star.y,
+          star.x - Math.cos(star.angle) * star.length,
+          star.y - Math.sin(star.angle) * star.length
+        );
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`);
+        gradient.addColorStop(0.5, `rgba(200, 220, 255, ${star.opacity * 0.5})`);
+        gradient.addColorStop(1, 'rgba(150, 180, 255, 0)');
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(star.x, star.y);
+        ctx.lineTo(
+          star.x - Math.cos(star.angle) * star.length,
+          star.y - Math.sin(star.angle) * star.length
+        );
+        ctx.stroke();
+
+        return true;
       });
 
       animationFrameRef.current = requestAnimationFrame(animate);
@@ -146,7 +232,7 @@ export function StarryBackground() {
     <canvas
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full -z-10"
-      style={{ background: '#0284c7' }}
+      style={{ background: 'transparent' }}
     />
   );
 }

@@ -92,7 +92,7 @@ export default function PopularVideosPage() {
         <StarryBackground />
         <div className="text-center">
           <div className="text-6xl mb-4">⏳</div>
-          <p className="text-gray-600">Загрузка...</p>
+          <p className="text-white text-xl font-semibold drop-shadow-lg">Загрузка...</p>
         </div>
       </div>
     );
@@ -258,7 +258,7 @@ export default function PopularVideosPage() {
 
         {/* Рейтинг видео */}
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">🏆 Рейтинг</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">🏆 Рейтинг</h2>
 
           {videos.length === 0 ? (
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-8 sm:p-12 text-center">
