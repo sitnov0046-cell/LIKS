@@ -20,9 +20,20 @@ export default function Home() {
   });
   const [showForm, setShowForm] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
-  const [isContentReady, setIsContentReady] = useState(true);
+  const [isContentReady, setIsContentReady] = useState(false);
   const { webApp } = useTelegramWebApp();
   const formRef = useRef<HTMLDivElement>(null);
+
+  // Проверяем, нужно ли показывать splash screen
+  useEffect(() => {
+    const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
+    if (!hasSeenSplash) {
+      setShowSplash(true);
+      setIsContentReady(false);
+    } else {
+      setIsContentReady(true);
+    }
+  }, []);
 
   // Проверяем query параметр для открытия формы
   useEffect(() => {
