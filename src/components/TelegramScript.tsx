@@ -18,6 +18,11 @@ export function TelegramScript() {
           tg.setBackgroundColor('#0f172a'); // Тёмный фон
         }
 
+        // Отключаем встроенный loader Telegram
+        if (tg.disableVerticalSwipes) {
+          tg.disableVerticalSwipes();
+        }
+
         // Расширяем приложение на весь экран
         tg.expand();
 
@@ -41,6 +46,7 @@ export function TelegramScript() {
           const tg = window.Telegram.WebApp as any;
           if (tg.setHeaderColor) tg.setHeaderColor('#0f172a');
           if (tg.setBackgroundColor) tg.setBackgroundColor('#0f172a');
+          if (tg.disableVerticalSwipes) tg.disableVerticalSwipes();
           tg.expand();
           tg.ready();
         }

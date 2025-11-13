@@ -147,11 +147,11 @@ export default function BalancePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center pb-24">
         <StarryBackground />
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Загрузка...</p>
+          <div className="text-5xl mb-3">⏳</div>
+          <p className="text-white/90 text-base drop-shadow-lg">Загрузка...</p>
         </div>
       </div>
     );

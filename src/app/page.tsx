@@ -20,19 +20,22 @@ export default function Home() {
   });
   const [showForm, setShowForm] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
-  const [isContentReady, setIsContentReady] = useState(false);
+  const [isContentReady, setIsContentReady] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
   const { webApp } = useTelegramWebApp();
   const formRef = useRef<HTMLDivElement>(null);
 
   // Проверяем, нужно ли показывать splash screen
   useEffect(() => {
+    // На localhost всегда показываем splash для предпросмотра
+    const isLocalhost = window.location.hostname === 'localhost';
     const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
-    if (!hasSeenSplash) {
+
+    if (isLocalhost || !hasSeenSplash) {
       setShowSplash(true);
       setIsContentReady(false);
-    } else {
-      setIsContentReady(true);
     }
+    setIsMounted(true);
   }, []);
 
   // Проверяем query параметр для открытия формы
@@ -149,22 +152,27 @@ export default function Home() {
     }
   };
 
+  // Don't render content until client-side JS runs to prevent flash
+  if (!isMounted) {
+    return <div className="min-h-screen bg-[#0f172a]" />;
+  }
+
   return (
     <>
       {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
       <StarryBackground />
 
       <main className={`min-h-screen flex items-center justify-center py-6 sm:py-12 pb-20 sm:pb-24 transition-opacity duration-500 ${
-        isContentReady ? 'opacity-100' : 'opacity-0'
+        isContentReady ? 'opacity-100' : 'opacity-0 invisible pointer-events-none'
       }`}>
         <div className="container mx-auto px-3 sm:px-5 max-w-4xl">
           {/* Блок с информацией о пользователе */}
           {/* Заголовок */}
           <div className="text-center mb-4 sm:mb-8">
-            <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2 sm:mb-3 drop-shadow-lg">
+            <h1 className="text-3xl sm:text-5xl font-bold text-white mb-2 sm:mb-3 drop-shadow-lg">
               👑 Генератор видео - LIKS 👑
             </h1>
-            <p className="text-white text-sm sm:text-lg mb-4 sm:mb-6 drop-shadow-md">
+            <p className="text-white text-base sm:text-xl mb-4 sm:mb-6 drop-shadow-md">
               Создавайте потрясающие видео с помощью ИИ<br />и делитесь ими с друзьями
             </p>
 

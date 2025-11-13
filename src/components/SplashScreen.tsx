@@ -41,6 +41,20 @@ export function SplashScreen({ onFinish, duration = 2500 }: SplashScreenProps) {
       {/* Космический фон */}
       <StarryBackground />
 
+      {/* Светящаяся галактика в центре */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div
+          className="rounded-full blur-3xl"
+          style={{
+            width: '600px',
+            height: '600px',
+            background: 'radial-gradient(circle, rgba(168, 85, 247, 0.8) 0%, rgba(236, 72, 153, 0.6) 25%, rgba(59, 130, 246, 0.5) 50%, rgba(147, 51, 234, 0.3) 70%, transparent 90%)',
+            animation: 'pulse 3s ease-in-out infinite',
+            opacity: 0.7
+          }}
+        />
+      </div>
+
       <div className="text-center relative z-10">
         {/* Большая анимированная иконка */}
         <div className="mb-6">
